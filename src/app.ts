@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { createClient } from 'redis';
 import RedisStore from "connect-redis"
 import { usersRouter } from './routes';
+import { setupSwagger } from './utils';
 
 declare module "express-session" {
   interface SessionData {
@@ -13,7 +14,7 @@ declare module "express-session" {
 
 // Load environment variables
 dotenv.config();
-const port = process.env.port || 3000;
+const port = process.env.port || '3000';
 const host = process.env.host || 'localhost';
 if(!process.env.JWT_SECRET) {
   console.error('❌ No JWT secret set. Exiting...');
@@ -42,7 +43,7 @@ const app = express();
 const apiRouter = Router();
 
 // Set up middleware
-app.use((req, res, next) => {
+app.use((req, _, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`)
   next()
 });
@@ -60,9 +61,24 @@ app.use(session({
 }));
 app.use(express.json())
 
-// Set up routes
+/**
+ * @swagger
+ * /healthcheck:
+ *  get:
+ *    summary: Health check endpoint
+ *    responses:
+ *      200:
+ *        description: Server is running
+ *        content:
+ *          text/plain:
+ *            schema:
+ *              type: string
+ *            example: "Server is running"
+ *    tags:
+ *      - Health Check
+ */
 app.get('/healthcheck', (_, res) => {
-  res.send('Server is up and running!');
+  res.send('🚀 Server is up and running!');
 });
 app.use('/api', apiRouter);
 apiRouter.use('/users', usersRouter);
@@ -70,6 +86,7 @@ apiRouter.use('/users', usersRouter);
 // Start the server
 const server = app.listen(port, () => {
   console.log(`✅ Server is running at ${host}:${port}`);
+  setupSwagger(app, port);
 });
 
 // Handle shutdown gracefully

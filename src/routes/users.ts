@@ -1,6 +1,6 @@
 import express, { Request } from 'express';
 import { PrismaClient } from '@prisma/client';
-import { createUser, getUserByEmail, getUserById, getValidatedUser, validatePassword } from '../models/user';
+import { createUser, getUserById, getValidatedUser } from '../models/user';
 
 const prisma = new PrismaClient()
 
@@ -12,6 +12,25 @@ interface UserRequestBody {
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * /users/me:
+ *   get:
+ *     summary: Get current user without password
+ *     tags:
+ *       - users                    # Add the "users" tag here
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A user object without the password
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UserWithOutPassword'
+ *       401:
+ *         description: Unauthorized
+ */
 router.get('/me', async (req, res) => {
   const userId = req.session.userId;
   if (!userId) {

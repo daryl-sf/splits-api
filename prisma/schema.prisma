@@ -24,6 +24,8 @@ model User {
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
   profile           Profile?
+  clubs             Club[]
+  ownedClubs        Club[]    @relation("ClubOwner")
 }
 
 model Profile {
@@ -31,6 +33,17 @@ model Profile {
   bio       String?
   user      User     @relation(fields: [userId], references: [id])
   userId    String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Club {
+  id        String   @id @default(cuid())
+  name      String
+  bio       String?
+  owner     User     @relation(fields: [ownerId], references: [id], name: "ClubOwner")
+  ownerId   String
+  members   User[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

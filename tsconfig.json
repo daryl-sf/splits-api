@@ -4,9 +4,19 @@
     "module": "commonjs",
     "outDir": "dist",
     "esModuleInterop": true,
+    "resolveJsonModule": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitAny": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["*"],
+      "@models/*": ["models/*"],
+      "@routes": ["routes/index"],
+      "@routes/*": ["routes/*"],
+      "@utils": ["utils/index"],
+      "@utils/*": ["utils/*"]
+    }
   }
 }
