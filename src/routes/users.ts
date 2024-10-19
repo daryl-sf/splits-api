@@ -2,7 +2,7 @@ import express, { Request } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { createUser, getUserById, getValidatedUser } from '../models/user';
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 interface UserRequestBody {
   name: string;
@@ -80,6 +80,45 @@ router.post('/signin', async (req, res) => {
     console.error(error);
     res.status(500).json({ message: 'An error occurred while signing in' });
   }
+});
+
+router.get('/clubs', async (req, res) => {
+  const userId = req.session.userId;
+  if (!userId) {
+    res.status(401).json({ message: 'Unauthorized' });
+    return;
+  }
+  const clubs = await prisma.club.findMany({
+    where: {
+      OR: [
+        {
+          members: {
+            some: {
+              id: userId,
+            },
+          },
+        },
+        {
+          ownerId: userId
+        }
+      ],
+    },
+  });
+  res.json(clubs);
+});
+
+router.get('/owned-clubs', async (req, res) => {
+  const userId = req.session.userId;
+  if (!userId) {
+    res.status(401).json({ message: 'Unauthorized' });
+    return;
+  }
+  const clubs = await prisma.club.findMany({
+    where: {
+      ownerId: userId,
+    },
+  });
+  res.json(clubs);
 });
 
 export default router;

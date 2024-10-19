@@ -3,7 +3,7 @@ import session from 'express-session';
 import dotenv from 'dotenv';
 import { createClient } from 'redis';
 import RedisStore from "connect-redis"
-import { usersRouter } from './routes';
+import { usersRouter, clubsRouter } from './routes';
 import { setupSwagger } from './utils';
 
 declare module "express-session" {
@@ -82,6 +82,8 @@ app.get('/healthcheck', (_, res) => {
 });
 app.use('/api', apiRouter);
 apiRouter.use('/users', usersRouter);
+apiRouter.use('/clubs', clubsRouter);
+
 
 // Start the server
 const server = app.listen(port, () => {
