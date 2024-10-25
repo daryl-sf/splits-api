@@ -6,7 +6,7 @@ services:
       - db
       - migrate
     environment:
-      DATABASE_URL: "postgresql://postgres:password@db:5432/mydatabase"
+      DATABASE_URL: "postgresql://postgres:password@db:5432/splits-api"
       REDIS_URL: "redis://redis:6379"
     env_file:
       - .env
@@ -19,7 +19,7 @@ services:
     depends_on:
       - db
     environment:
-      DATABASE_URL: "postgresql://postgres:password@db:5432/mydatabase"
+      DATABASE_URL: "postgresql://postgres:password@db:5432/splits-api"
     env_file:
       - .env
     command: ["npm", "run", "db:migrate"]
@@ -34,6 +34,6 @@ services:
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "password"
-      POSTGRES_DB: "mydatabase"
+      POSTGRES_DB: "splits-api"
     ports:
       - "5432:5432" # PostgreSQL default port
