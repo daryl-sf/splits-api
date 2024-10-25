@@ -1,3 +1,4 @@
 /dist
 vitest.config.ts
 testSetup.ts
+**/*.test.ts
