@@ -2,13 +2,13 @@
   "name": "splits-api",
   "version": "1.0.0",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "dev": "nodemon - exec 'ts-node' src/app.ts",
     "build": "tsc",
-    "pre:start": "npm run build",
     "start": "node ./dist/src/app.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "pretest": "dotenv -e .env.test -- prisma db push",
+    "test": "dotenv -e .env.test -- vitest run",
+    "test:watch": "dotenv -e .env.test -- vitest",
     "db:migrate": "prisma migrate dev",
     "db:generate": "prisma generate",
     "db:studio": "prisma studio",
@@ -39,12 +39,14 @@
     "@types/express-session": "^1.18.0",
     "@typescript-eslint/eslint-plugin": "^8.11.0",
     "@typescript-eslint/parser": "^8.11.0",
+    "dotenv-cli": "^7.4.2",
     "eslint": "^9.13.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-prettier": "^5.2.1",
     "prettier": "^3.3.3",
     "prisma": "^5.20.0",
-    "typescript-json-schema": "^0.65.1"
+    "typescript-json-schema": "^0.65.1",
+    "vitest": "^2.1.3"
   }
 }
