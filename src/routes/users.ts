@@ -1,5 +1,6 @@
-import express, { Request } from 'express';
 import { PrismaClient } from '@prisma/client';
+import express, { Request } from 'express';
+
 import { createUser, getUserById, getValidatedUser } from '../models/user';
 
 const prisma = new PrismaClient();

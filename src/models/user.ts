@@ -36,7 +36,7 @@ export const getUserById = async (id: User['id']) => {
   });
 }
 
-export const validatePassword = (password: User['password'], hashedPassword: User['password']) => {
+export const validatePassword = (password: User['password'], hashedPassword: User['password']): Promise<boolean> => {
   return bcrypt.compare(password, hashedPassword);
 };
 

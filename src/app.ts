@@ -1,8 +1,9 @@
+import RedisStore from "connect-redis"
+import dotenv from 'dotenv';
 import express, { Router } from 'express';
 import session from 'express-session';
-import dotenv from 'dotenv';
 import { createClient } from 'redis';
-import RedisStore from "connect-redis"
+
 import { usersRouter, clubsRouter } from './routes';
 
 declare module "express-session" {

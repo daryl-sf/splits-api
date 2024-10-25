@@ -1,5 +1,5 @@
-import usersRouter from './users';
 import clubsRouter from './clubs';
+import usersRouter from './users';
 
 export {
   usersRouter,
