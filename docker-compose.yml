@@ -4,6 +4,7 @@ services:
     depends_on:
       - redis
       - db
+      - migrate
     environment:
       DATABASE_URL: "postgresql://postgres:password@db:5432/mydatabase"
       REDIS_URL: "redis://redis:6379"
@@ -11,7 +12,7 @@ services:
       - .env
     ports:
       - "3000:3000" # Expose your app on port 3000 or the port it uses
-    command: ["node", "app.js"]
+    command: ["node", "src/app.js"]
 
   migrate:
     build: .
@@ -29,7 +30,7 @@ services:
       - "6379:6379" # Redis default port
 
   db:
-    image: "postgres:15-alpine"
+    image: "postgres:16-alpine"
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "password"
