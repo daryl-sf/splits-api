@@ -4,7 +4,6 @@ import dotenv from 'dotenv';
 import { createClient } from 'redis';
 import RedisStore from "connect-redis"
 import { usersRouter, clubsRouter } from './routes';
-import { setupSwagger } from './utils';
 
 declare module "express-session" {
   interface SessionData {
@@ -26,11 +25,12 @@ let redisClient: ReturnType<typeof createClient>;
 try {
   redisClient = createClient({
     url: process.env.REDIS_URL,
-  })
-  redisClient.connect().catch(console.error)
+  });
+  redisClient.connect();
+  console.log('✅ Connected to Redis');
 } catch (error) {
-  console.error('❌ Error connecting to Redis:', error)
-  process.exit(1)
+  console.error('❌ Error connecting to Redis:', error);
+  process.exit(1);
 }
 
 const redisStore = new RedisStore({
@@ -61,24 +61,8 @@ app.use(session({
 }));
 app.use(express.json())
 
-/**
- * @swagger
- * /healthcheck:
- *  get:
- *    summary: Health check endpoint
- *    responses:
- *      200:
- *        description: Server is running
- *        content:
- *          text/plain:
- *            schema:
- *              type: string
- *            example: "Server is running"
- *    tags:
- *      - Health Check
- */
 app.get('/healthcheck', (_, res) => {
-  res.send('🚀 Server is up and running!');
+  res.json({ message: '🚀 Server is up and running!' });
 });
 app.use('/api', apiRouter);
 apiRouter.use('/users', usersRouter);
@@ -87,8 +71,7 @@ apiRouter.use('/clubs', clubsRouter);
 
 // Start the server
 const server = app.listen(port, () => {
-  console.log(`✅ Server is running at ${host}:${port}`);
-  setupSwagger(app, port);
+  console.log(`✅ Server is running at https://${host}:${port}`);
 });
 
 // Handle shutdown gracefully
