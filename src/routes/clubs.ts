@@ -1,9 +1,6 @@
-import { PrismaClient } from '@prisma/client';
+import { Club } from '@models/club';
 import express, { Request, Response } from 'express';
 
-import { Club } from '@models/club';
-
-const prisma = new PrismaClient();
 
 interface ClubRequestBody {
   name: string;

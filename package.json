@@ -6,7 +6,7 @@
     "dev": "nodemon --exec 'ts-node -r tsconfig-paths/register' src/app.ts",
     "build": "tsc",
     "start": "node ./dist/src/app.js",
-    "pretest": "dotenv -e .env.test -- prisma db push",
+    "pretest": "dotenv -e .env.test -- prisma db push && dotenv -e .env.test -- ts-node prisma/seed.test.ts",
     "test": "dotenv -e .env.test -- vitest run",
     "test:watch": "dotenv -e .env.test -- vitest",
     "db:migrate": "prisma migrate dev",

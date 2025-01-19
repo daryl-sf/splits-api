@@ -7,6 +7,7 @@ export default defineConfig({
     globals: true,
     environment: 'node',
     include: ['**/*.test.ts'],
+    exclude: ['prisma/**', 'node_modules/**'],
     setupFiles: ['./testSetup.ts'],
     coverage: {
       reporter: ['text', 'json', 'html'],

@@ -1,9 +1,6 @@
-import { PrismaClient } from '@prisma/client';
+import { User, Club } from '@models/index';
 import express, { Request } from 'express';
 
-import { User, Club } from '@models/index';
-
-const prisma = new PrismaClient();
 
 interface UserRequestBody {
   name: string;
