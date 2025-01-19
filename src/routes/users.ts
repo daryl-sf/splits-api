@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import express, { Request } from 'express';
 
-import { createUser, getUserById, getValidatedUser } from '../models/user';
+import { User, Club } from '@models/index';
 
 const prisma = new PrismaClient();
 
@@ -19,7 +19,7 @@ router.get('/me', async (req, res) => {
     res.status(401).json({ message: 'Unauthorized' });
     return;
   }
-  const user = await getUserById(userId);
+  const user = await User.getUserById(userId);
   if (!user) {
     res.status(401).json({ message: 'Unauthorized' });
     return;
@@ -38,7 +38,7 @@ router.post('/signout', (req, res) => {
 router.post('/signup', async (req: Request<{}, {}, UserRequestBody>, res) => {
   const { name, password, email } = req.body;
   try {
-    const user = await createUser(name, email, password);
+    const user = await User.create(name, email, password);
     req.session.userId = user.id;
     res.json(user);
   } catch (error) {
@@ -50,7 +50,7 @@ router.post('/signup', async (req: Request<{}, {}, UserRequestBody>, res) => {
 router.post('/signin', async (req, res) => {
   const { email, password } = req.body;
   try {
-    const user = await getValidatedUser(email, password);
+    const user = await User.getValidatedUser(email, password);
     if (!user) {
       res.status(401).json({ message: 'Invalid email or password' });
       return;
@@ -70,22 +70,7 @@ router.get('/clubs', async (req, res) => {
     res.status(401).json({ message: 'Unauthorized' });
     return;
   }
-  const clubs = await prisma.club.findMany({
-    where: {
-      OR: [
-        {
-          members: {
-            some: {
-              id: userId,
-            },
-          },
-        },
-        {
-          ownerId: userId
-        }
-      ],
-    },
-  });
+  const clubs = await Club.getClubs(userId);
   res.json(clubs);
 });
 
@@ -95,11 +80,7 @@ router.get('/owned-clubs', async (req, res) => {
     res.status(401).json({ message: 'Unauthorized' });
     return;
   }
-  const clubs = await prisma.club.findMany({
-    where: {
-      ownerId: userId,
-    },
-  });
+  const clubs = await Club.getOwnedClubs(userId);
   res.json(clubs);
 });
 

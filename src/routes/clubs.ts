@@ -1,6 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 import express, { Request, Response } from 'express';
 
+import { Club } from '@models/club';
+
 const prisma = new PrismaClient();
 
 interface ClubRequestBody {
@@ -17,22 +19,7 @@ router.post('/new', async (req: Request<{}, {}, ClubRequestBody>, res: Response)
     return;
   }
   const { name, bio } = req.body;
-  const club = await prisma.club.create({
-    data: {
-      name,
-      bio,
-      owner: {
-        connect: {
-          id: userId,
-        },
-      },
-      members: {
-        connect: {
-          id: userId,
-        },
-      },
-    }
-  });
+  const club = await Club.create(name, bio, userId);
 
   res.json(club);
 });
